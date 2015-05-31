@@ -41,11 +41,11 @@ public class DbEventConsumer {
             public void onDatabaseChangeNotification(DatabaseChangeEvent databaseChangeEvent) {
                 TableChangeDescription tcd =  databaseChangeEvent.getTableChangeDescription()[0];
                 for(RowChangeDescription rcd : tcd.getRowChangeDescription()){
-                    System.out.println("Updated Row ID:" + rcd.getRowid().stringValue());
+                    System.out.println("Updated Row ID:" + rcd.getRowid().stringValue() + " Operation:" + rcd.getRowOperation().name());
                 // emit rowid to Kafka cluster
-                    ProducerRecord<String,String> record = new ProducerRecord<String,String>("test", rcd.getRowid().stringValue(), rcd.getRowid().stringValue());
+                    ProducerRecord<String,String> record = new ProducerRecord<String,String>(Producer.KAFKA_TOPIC, rcd.getRowid().stringValue(), rcd.getRowid().stringValue());
 
-                    Producer.getProducer().send(record, new Callback() {
+                    Producer.getKafkaProducer().send(record, new Callback() {
                         @Override
                         public void onCompletion(RecordMetadata recordMetadata, Exception e) {
                             if(e != null){
@@ -75,8 +75,6 @@ public class DbEventConsumer {
         }
         rs.close();
         stm.close();
-
-
     }
 
 
@@ -94,37 +92,23 @@ public class DbEventConsumer {
         private static final String KAFKA_TOPIC = "test";
         private static HashMap<String, Object> config = new HashMap<String, Object>();
 
-
-        public static KafkaProducer getProducer(){
-            //config.put("metadata.broker.list", "localhost:9092");
-            //config.put("request.required.acks", 0);
+        private static KafkaProducer kafkaProducer;
+        static{
             config.put("producer.type", "sync");
             config.put("serializer.class", "kafka.serializer.StringEncoder");
-            config.put("bootstrap.servers", "localhost:9092");
+            config.put("bootstrap.servers", KAFKA_HOST+":"+KAFKA_PORT);
             config.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
             config.put("value.serializer","org.apache.kafka.common.serialization.StringSerializer");
             config.put("request.required.acks", "1");
-
-            return new KafkaProducer(config);
-            //return producer;
+            kafkaProducer = new KafkaProducer(config);
         }
 
-        /*public static void main(String[] args) throws Exception{
-            System.out.println("sending message to topic test");
-            Producer producer = new Producer();
-            ProducerRecord<String,String> record = new ProducerRecord<String,String>("test", "key", "test Message from Java!!");
+        public static KafkaProducer getKafkaProducer(){
+            if(kafkaProducer == null){
+                return new KafkaProducer(config);
+            }
+            return kafkaProducer;
+        }
 
-            producer.getProducer().send(record, new Callback() {
-                @Override
-                public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-                    if(e != null){
-                        e.printStackTrace();
-                    }else{
-                        System.out.printf("Message got" + recordMetadata.topic());
-                    }
-                }
-            });
-            Thread.sleep(1000000000000l);
-        }*/
     }
 }
