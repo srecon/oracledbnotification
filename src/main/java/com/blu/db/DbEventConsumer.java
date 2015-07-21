@@ -33,16 +33,21 @@ public class DbEventConsumer {
         OracleConnection connection = getConnection();
         Properties properties = new Properties();
         properties.setProperty(OracleConnection.DCN_NOTIFY_ROWIDS, "true");
+        properties.setProperty(OracleConnection.DCN_QUERY_CHANGE_NOTIFICATION, "true"); //Activates query change notification instead of object change notification.
+
         // Register notifier
         DatabaseChangeRegistration reg = connection.registerDatabaseChangeNotification(properties);
 
         reg.addListener(new DatabaseChangeListener() {
             @Override
             public void onDatabaseChangeNotification(DatabaseChangeEvent databaseChangeEvent) {
-                TableChangeDescription tcd =  databaseChangeEvent.getTableChangeDescription()[0];
+                //TableChangeDescription tcd =  databaseChangeEvent.getTableChangeDescription()[0];
+                QueryChangeDescription qcd =  databaseChangeEvent.getQueryChangeDescription()[0];
+                TableChangeDescription tcd = qcd.getTableChangeDescription()[0];
                 for(RowChangeDescription rcd : tcd.getRowChangeDescription()){
                     System.out.println("Updated Row ID:" + rcd.getRowid().stringValue() + " Operation:" + rcd.getRowOperation().name());
-                // emit rowid to Kafka cluster
+                    //System.out.printf("Full event: " + databaseChangeEvent);
+                /*// emit rowid to Kafka cluster
                     ProducerRecord<String,String> record = new ProducerRecord<String,String>(Producer.KAFKA_TOPIC, rcd.getRowid().stringValue(), rcd.getRowid().stringValue());
 
                     Producer.getKafkaProducer().send(record, new Callback() {
@@ -54,12 +59,12 @@ public class DbEventConsumer {
                                 System.out.printf("Message sent!");
                             }
                         }
-                    });
+                    });*/
                 }
             }
         });
 
-        String query = "select * from temp";
+        String query = "select * from temp t where t.a = 'a1'";
         Statement stm = connection.createStatement();
         ((OracleStatement) stm).setDatabaseChangeRegistration(reg);
 
