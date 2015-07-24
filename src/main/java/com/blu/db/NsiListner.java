@@ -1,5 +1,6 @@
 package com.blu.db;
 
+import com.google.common.collect.Lists;
 import oracle.jdbc.dcn.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,17 +17,12 @@ public class NsiListner implements DatabaseChangeListener {
     private HashMap<Integer, List<ORNEvent>> events = new HashMap<Integer, List<ORNEvent>>();
 
     @Override
-    //TODO ResultSetMetaDataOptions property is set to 1
-    //todo select object_name from user_objects where object_id=73786
     public void onDatabaseChangeNotification(DatabaseChangeEvent databaseChangeEvent) {
-
-
-
         for(QueryChangeDescription qcd : databaseChangeEvent.getQueryChangeDescription()){
             LOGGER.info("Query Id: {}", qcd.getQueryId());
             LOGGER.info("Event Type: {}", qcd.getQueryChangeEventType().name());
             Integer tableId = null;
-            final List<ORNEvent> ornEvents = new ArrayList<ORNEvent>();
+            final List<ORNEvent> ornEvents = Lists.newArrayList();
             for(TableChangeDescription tcd : qcd.getTableChangeDescription()){
                 //ClassDescriptor descriptor = OracleChangeNotificationListener.this.descriptorsByTable.get(new DatabaseTable(tcd.getTableName()));
                 LOGGER.info("table Name: {}", tcd.getTableName()); // table name is empty
