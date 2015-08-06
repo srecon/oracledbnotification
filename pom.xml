@@ -77,6 +77,22 @@
       <artifactId>woodstox-core-asl</artifactId>
       <version>4.4.1</version>
     </dependency>
+    <!-- ActiveMq-->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-client</artifactId>
+      <version>5.11.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-openwire-legacy</artifactId>
+      <version>5.11.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-pool</artifactId>
+      <version>5.11.1</version>
+    </dependency>
   </dependencies>
 
   <build>

@@ -26,6 +26,6 @@ public class ExecuteClients {
         // second one
 /*        SimpleClient secondClient = new SimpleClient("second", client, PATH);
         secondClient.start();*/
-        Thread.sleep(Integer.MAX_VALUE);
+        Thread.sleep(Long.MAX_VALUE);
     }
 }

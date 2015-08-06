@@ -20,6 +20,7 @@ public class DBNotifactionConsumer {
     private NsiOracleConnection oracleConnection;
     private static final Properties properties = new Properties();
     private String queryString;
+    private String queueName;
 
     public String getQueryString() {
         return queryString;
@@ -27,6 +28,14 @@ public class DBNotifactionConsumer {
 
     public void setQueryString(String queryString) {
         this.queryString = queryString;
+    }
+
+    public String getQueueName() {
+        return queueName;
+    }
+
+    public void setQueueName(String queueName) {
+        this.queueName = queueName;
     }
 
     static{
@@ -44,7 +53,7 @@ public class DBNotifactionConsumer {
 
     public void registerNotification() throws SQLException{
         DatabaseChangeRegistration databaseChangeRegistration =  getOracleConnection().getConnection().registerDatabaseChangeNotification(properties);
-        databaseChangeRegistration.addListener(new NsiListner());
+        databaseChangeRegistration.addListener(new NsiListner(getQueueName()));
         Statement stm = getOracleConnection().getConnection().createStatement();
         ((OracleStatement) stm).setDatabaseChangeRegistration(databaseChangeRegistration);
         ResultSet rs;

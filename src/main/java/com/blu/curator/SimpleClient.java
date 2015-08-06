@@ -38,25 +38,10 @@ public class SimpleClient extends LeaderSelectorListenerAdapter {
 
     @Override
     public void takeLeadership(CuratorFramework curatorFramework) throws Exception {
-/*        final int waitSeconds = (int)(5 * Math.random()) + 1;
-
-        System.out.println(this.clientName + " is now the leader. Waiting " + waitSeconds + " seconds...");
-        System.out.println(this.clientName + " has been leader " + leaderCount.getAndIncrement() + " time(s) before.");
-        try{
-            Thread.sleep(waitSeconds);
-
-        } catch(InterruptedException e){
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-
-        } finally{
-            LOGGER.info(this.clientName+" relinquishing leadership.\\n");
-        }*/
         // run oracle notification here
-
         consumer.registerNotification();
         System.out.println(this.clientName + " is now the leader!!");
-        Thread.sleep(Integer.MAX_VALUE);
+        Thread.sleep(Long.MAX_VALUE);
     }
     public void start(){
         leaderSelector.start();
