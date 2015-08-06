@@ -1,20 +1,11 @@
-# oracledbnotification
-Example for using oracle DB notification with storm to export data to Cassandra
-Start Kafka standalone
-start zookeeper
-$bin/zookeeper-server-start.sh config/zookeeper.properties
-start kafka
-$bin/kafka-server-start.sh config/server.properties
-create topic test
-$bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
-start consulmer on topic test
-$bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test --from-beginning
-# table temp
-truncate table temp;
+# Using of Oracle QRN
+>Given library provides Oracle query notification functionality to an existing system. It can be use as a standalone application with
+>leader election functionality through Zookeeper and able to send notification with RowID to any messanging queue such as Apollo or Kafka. Consumer of the
+>queue can consume the message and query to the data base to get the changed row and feed Elastic search or execute any operation.
 
-insert into temp(a,b) values ('a','b');
-insert into temp(a,b) values ('a','b');
-insert into temp(a,b) values ('a','b');
-insert into temp(a,b) values ('a','b');
-insert into temp(a,b) values ('a','b');
-commit;
+### Version
+1.0-snapshot
+
+### Core functionalities
+* [oracledbnotification] - collect and send the notification of QRN to any existing queue.
+* [event-processor] - consumer, collects the message from the queue and start processing 
