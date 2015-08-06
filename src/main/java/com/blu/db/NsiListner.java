@@ -26,7 +26,7 @@ public class NsiListner implements DatabaseChangeListener {
             for(TableChangeDescription tcd : qcd.getTableChangeDescription()){
                 //ClassDescriptor descriptor = OracleChangeNotificationListener.this.descriptorsByTable.get(new DatabaseTable(tcd.getTableName()));
                 LOGGER.info("table Name: {}", tcd.getTableName()); // table name is empty
-                LOGGER.info("Object ID: {}", tcd.getObjectNumber()); // use object id]]
+                LOGGER.info("Object ID: {}", tcd.getObjectNumber()); // use object id
                 tableId = tcd.getObjectNumber();
                 for(RowChangeDescription rcd : tcd.getRowChangeDescription()){
                     LOGGER.info("Row ID:" + rcd.getRowid().stringValue() + " Operation:" + rcd.getRowOperation().name());

@@ -18,6 +18,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 /**
  * Created by shamim on 30/05/15.
  */
+// @TODO delete soon
 public class DbEventConsumer {
     private static final String USERNAME="dontdelete1";
     private static final String PASSWORD = "dontdelete1";
